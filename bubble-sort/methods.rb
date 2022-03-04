@@ -9,7 +9,6 @@ def bubble_sort(numbers)
 
         #check until last index - iterations (n)
         while m < sortednumbers.size - 1 - n do
-            puts "size: #{sortednumbers.size} m: #{m} n: #{n}"
             if sortednumbers[m + 1] < sortednumbers[m]
                 sortednumbers.insert(m, sortednumbers.delete_at(m + 1))
                 swapped = true
