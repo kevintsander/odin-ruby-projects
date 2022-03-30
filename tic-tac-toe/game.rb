@@ -37,7 +37,7 @@ class TicTacToeGame
     end
     if win == true
       return true
-    end if
+    end
 
     #check diagonals
     left_i = 0
@@ -84,40 +84,43 @@ class TicTacToeGame
 
   public
 
+  def play_turn(player)
+    puts "#{player}, enter row #, then column #:"
+    position_open = false
+    row = nil
+    column = nil
+    while position_open == false
+      puts "Row:"
+      row = gets.chomp.to_i - 1
+      puts "Column:"
+      column = gets.chomp.to_i - 1
+      position_open = location_open?(row, column)
+      if position_open == false
+        space_taken_message
+      end
+    end
+    update_board(player, row, column)
+  end
+
+
   def play_game
     while !win?
-      puts "#{@player1}, enter row #, then column #:"
-      player1_pos_open = false
-      while player1_pos_open == false
-        player1_row = gets.chomp.to_i - 1
-        player1_column = gets.chomp.to_i - 1
-        player1_pos_open = location_open?(player1_row, player1_column)
-        if player1_pos_open == false
-          space_taken_message
-        end
+      play_turn(@player1)
+      if win?
+        return win_message(@player1)
       end
-      play(@player1, player1_row, player1_column)
-      win? && return
-
-      puts "#{@player2}, enter row #, then column #:"
-      player2_pos_open = false
-      while player2_pos_open == false
-        player2_row = gets.chomp.to_i - 1
-        player2_column = gets.chomp.to_i - 1
-        player2_pos_open = location_open?(player2_row, player2_column)
-        if player2_pos_open == false
-          space_taken_message
-        end
+      play_turn(@player2)
+      if win?
+        return win_message(@player2)
       end
-      
-      play(@player2, player2_row, player2_column)
     end
-    win_message
   end
 
-  def play(player, row, column)
+  def update_board(player, row, column)
     @board[row][column] = player
     display_board
-    win?
   end
 end
+
+game = TicTacToeGame.new('O', 'X')
+game.play_game
