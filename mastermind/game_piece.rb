@@ -3,7 +3,7 @@
 require 'colorize'
 
 # Represents a color
-class ItemColor
+class GamePiece
   attr_reader :color
 
   COLORS = { red: { id: 0, abbrev: 'R', text_color: :white },
@@ -21,8 +21,12 @@ class ItemColor
     color
   end
 
-  def self.color_by_id(id)
+  def self.piece_by_color_id(id)
     new(COLORS.find { |_color, values| values[:id] == id }.first)
+  end
+
+  def self.piece_by_color_abbrev(abbrev)
+    new(COLORS.find { |_color, values| values[:abbrev] == abbrev }.first)
   end
 
   def initialize(color)
