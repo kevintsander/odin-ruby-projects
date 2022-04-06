@@ -13,6 +13,10 @@ class GamePiece
              blue: { id: 4, abbrev: 'B', text_color: :white },
              magenta: { id: 5, abbrev: 'M', text_color: :white } }.freeze
 
+  def initialize(color)
+    @color = self.class.check_color(color)
+  end
+
   def self.check_color(color)
     unless COLORS.include?(color)
       raise ArgumentError, "Color must be red, orange, yellow, green, blue, or magenta. Value: #{color}"
@@ -21,16 +25,12 @@ class GamePiece
     color
   end
 
-  def self.piece_by_color_id(id)
+  def self.from_id(id)
     new(COLORS.find { |_color, values| values[:id] == id }.first)
   end
 
-  def self.piece_by_color_abbrev(abbrev)
-    new(COLORS.find { |_color, values| values[:abbrev] == abbrev }.first)
-  end
-
-  def initialize(color)
-    @color = self.class.check_color(color)
+  def self.from_abbrev(abbrev)
+    new(COLORS.find { |_color, values| values[:abbrev] == abbrev.upcase }.first)
   end
 
   def color_id
@@ -45,7 +45,7 @@ class GamePiece
     COLORS[color][:text_color]
   end
 
-  def color_display
+  def display
     " #{color_abbrev} ".colorize(background: color, color: color_text_color)
   end
 end
