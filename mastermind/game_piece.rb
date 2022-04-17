@@ -7,7 +7,7 @@ class GamePiece
   attr_reader :color
 
   COLORS = { red: { id: 0, abbrev: 'R', text_color: :white },
-             orange: { id: 1, abrrev: 'O', text_color: :black },
+             cyan: { id: 1, abbrev: 'C', text_color: :black },
              yellow: { id: 2, abbrev: 'Y', text_color: :black },
              green: { id: 3, abbrev: 'G', text_color: :black },
              blue: { id: 4, abbrev: 'B', text_color: :white },
@@ -19,7 +19,7 @@ class GamePiece
 
   def self.check_color(color)
     unless COLORS.include?(color)
-      raise ArgumentError, "Color must be red, orange, yellow, green, blue, or magenta. Value: #{color}"
+      raise ArgumentError, "Color must be red, cyan, yellow, green, blue, or magenta. Value: #{color}"
     end
 
     color
@@ -30,22 +30,23 @@ class GamePiece
   end
 
   def self.from_abbrev(abbrev)
+    p abbrev
     new(COLORS.find { |_color, values| values[:abbrev] == abbrev.upcase }.first)
   end
 
-  def color_id
+  def id
     COLORS[color][:id]
   end
 
-  def color_abbrev
+  def abbrev
     COLORS[color][:abbrev]
   end
 
-  def color_text_color
+  def text_color
     COLORS[color][:text_color]
   end
 
   def display
-    " #{color_abbrev} ".colorize(background: color, color: color_text_color)
+    " #{color_abbrev} ".colorize(background: color, color: text_color)
   end
 end
