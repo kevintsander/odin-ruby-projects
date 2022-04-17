@@ -37,7 +37,7 @@ class KnuthAI
     @code_options = code_options
 
     @all_possible_codes = all_possible_codes
-    @unused_codes_all_scores = possible_codes_all_scores
+    @unused_codes_all_scores = possible_codes_with_scores
     refresh
   end
 
@@ -51,9 +51,20 @@ class KnuthAI
     guess
   end
 
+  def refresh
+    @current_possible_codes = @all_possible_codes.dup
+    @guessed_codes = []
+  end
+
+  private
+
   def update_guesses!(guess)
     @guessed_codes.push(guess)
     @unused_codes_all_scores.delete_if { |code_score| code_score[0] == guess }
+  end
+
+  def eliminate_codes!(guess_code, guess_score)
+    @current_possible_codes -= self.class.eliminated_codes(@current_possible_codes, guess_code, guess_score)
   end
 
   def possible_scores
@@ -70,12 +81,8 @@ class KnuthAI
     @all_possible_codes - @guessed_codes
   end
 
-  def possible_codes_all_scores
+  def possible_codes_with_scores
     @all_possible_codes.product(possible_scores)
-  end
-
-  def eliminate_codes!(guess_code, guess_score)
-    @current_possible_codes -= self.class.eliminated_codes(@current_possible_codes, guess_code, guess_score)
   end
 
   def curent_best_guesses
@@ -102,10 +109,5 @@ class KnuthAI
 
   def all_possible_codes
     [*1..@code_options].repeated_permutation(@code_length).to_a
-  end
-
-  def refresh
-    @current_possible_codes = @all_possible_codes.dup
-    @guessed_codes = []
   end
 end
