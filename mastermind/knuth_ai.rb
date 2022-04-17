@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'code_score'
+require_relative 'code_scorer'
 
 # Contains logic for AI guesses
 # 1. Create the set S of 1,296 possible codes (1111, 1112 ... 6665, 6666)
@@ -21,7 +21,7 @@ require_relative 'code_score'
 #         Knuth also gives an example showing that in some cases no member of S will be among the highest scoring guesses 
 #         and thus the guess cannot win on the next turn, yet will be necessary to assure a win in five.)
 # 7. Repeat from step 3.
-class GuessAI
+class KnuthAI
   extend CodeScorer
 
   class << self
@@ -41,14 +41,12 @@ class GuessAI
     refresh
   end
 
-  def guess(last_score)
-    guess = []
-    if @guessed_codes.empty?
-      guess = @all_possible_codes.sample
-    else
-      eliminate_codes!(@guessed_codes.last, last_score)
-      guess = best_guess
-    end
+  def guess(last_score = [0, 0])
+    guess = if @guessed_codes.empty?
+              @all_possible_codes.sample
+            else
+              best_guess(last_score)
+            end
     update_guesses!(guess)
     guess
   end
@@ -80,7 +78,7 @@ class GuessAI
     @current_possible_codes -= self.class.eliminated_codes(@current_possible_codes, guess_code, guess_score)
   end
 
-  def best_guesses
+  def curent_best_guesses
     hit_count_group = @unused_codes_all_scores.group_by do |code_score|
       @current_possible_codes.size - self.class.eliminated_codes(@current_possible_codes, code_score[0], code_score[1]).size
     end
@@ -88,14 +86,17 @@ class GuessAI
     best_code_scores.map { |best_code_score| best_code_score[0] }
   end
 
-  def best_guess
-    best = best_guesses
-    best_in_possible = best & @current_possible_codes
+  def best_guess(last_score)
+    eliminate_codes!(@guessed_codes.last, last_score)
+
+    best_guesses = curent_best_guesses
+    best_in_possible = best_guesses & @current_possible_codes
+
     # try to take the best guess from list of current possible codes, otherwise just pick a random unused
     if best_in_possible.any?
       best_in_possible.sample
     else
-      best.sample
+      best_guesses.sample
     end
   end
 
