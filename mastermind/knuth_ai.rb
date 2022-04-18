@@ -16,36 +16,29 @@ class KnuthAI
     end
   end
 
-  def initialize(code_length, code_options)
+  def initialize(code_length, code_options, scoreboard)
     @code_length = code_length
     @code_options = code_options
+    @scoreboard = scoreboard
 
     @all_possible_codes = all_possible_codes
-    @unused_codes_all_scores = possible_codes_with_scores
+    @possible_codes_with_scores = possible_codes_with_scores
     refresh
   end
 
   def refresh
     @current_possible_codes = @all_possible_codes.dup
-    @guessed_codes = []
   end
 
-  def guess(last_score = [0, 0])
-    guess = if @guessed_codes.empty?
-              @all_possible_codes.sample
-            else
-              best_guess(last_score)
-            end
-    update_guesses!(guess)
-    guess
+  def guess
+    if @scoreboard.empty?
+      @all_possible_codes.sample
+    else
+      best_guess
+    end
   end
 
   private
-
-  def update_guesses!(guess)
-    @guessed_codes.push(guess)
-    @unused_codes_all_scores.delete_if { |code_score| code_score[0] == guess }
-  end
 
   def eliminate_possible_codes!(guess_code, guess_score)
     @current_possible_codes -= self.class.eliminated_codes(@current_possible_codes, guess_code, guess_score)
@@ -62,7 +55,7 @@ class KnuthAI
   end
 
   def unused_codes
-    @all_possible_codes - @guessed_codes
+    @all_possible_codes - @scoreboard.codes.map { |code| code.values }
   end
 
   def possible_codes_with_scores
@@ -70,16 +63,20 @@ class KnuthAI
   end
 
   def best_guesses
-    # group the possible scores by the amount eliminated in the current set
-    hit_count_group = @unused_codes_all_scores.group_by do |code_score|
+    # get the list of unused scores (pre-compiled with all possible scores)
+    unused_codes_with_scores = @possible_codes_with_scores.reject do |code_score|
+      @scoreboard.codes.any? { |code| code.values == code_score[0] }
+    end
+    # group codes by the amount they will eliminate from possible codes
+    hit_count_group = unused_codes_with_scores.group_by do |code_score|
       self.class.eliminated_codes(@current_possible_codes, code_score[0], code_score[1]).size
     end
     # get the group with the most eliminated, then extract the codes
     hit_count_group.max.last.map { |best_code_score| best_code_score[0] }
   end
 
-  def best_guess(last_score)
-    eliminate_possible_codes!(@guessed_codes.last, last_score)
+  def best_guess
+    eliminate_possible_codes!(@scoreboard.last_code.values, @scoreboard.last_score.values)
 
     best = best_guesses
     best_in_possible = best & @current_possible_codes

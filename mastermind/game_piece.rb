@@ -6,12 +6,12 @@ require 'colorize'
 class GamePiece
   attr_reader :color
 
-  COLORS = { red: { id: 0, abbrev: 'R', text_color: :white },
-             cyan: { id: 1, abbrev: 'C', text_color: :black },
-             yellow: { id: 2, abbrev: 'Y', text_color: :black },
-             green: { id: 3, abbrev: 'G', text_color: :black },
-             blue: { id: 4, abbrev: 'B', text_color: :white },
-             magenta: { id: 5, abbrev: 'M', text_color: :white } }.freeze
+  COLORS = { red: { id: 1, abbrev: 'R', text_color: :white },
+             cyan: { id: 2, abbrev: 'C', text_color: :black },
+             yellow: { id: 3, abbrev: 'Y', text_color: :black },
+             green: { id: 4, abbrev: 'G', text_color: :black },
+             blue: { id: 5, abbrev: 'B', text_color: :white },
+             magenta: { id: 6, abbrev:'M', text_color: :white } }.freeze
 
   def initialize(color)
     @color = self.class.check_color(color)
