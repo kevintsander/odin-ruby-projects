@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'pry-byebug'
 require 'highline/import'
 require_relative 'code_score'
 require_relative 'scoreboard'
@@ -184,7 +183,7 @@ class Game
   end
 
   def show_intro
-    puts 'Welcome to Mastermind! One player will create a code and the other will try' \
+    puts 'Welcome to Mastermind! One player will create a code and the other will try ' \
          'to guess it before running out of turns.'
   end
 end
