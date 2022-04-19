@@ -12,6 +12,10 @@ class ScoreBoard
     @board.push({code: code, score: score})
   end
 
+  def refresh
+    @board.clear
+  end
+
   def last_score
     @board.last[:score]
   end
@@ -40,4 +44,8 @@ class ScoreBoard
     scores.map { |score| score.values } || []
   end
 
+  def last_code_score_text
+    last = @board.last
+    "Guess: #{last[:code].text} Score: #{last[:score].text}"
+  end
 end

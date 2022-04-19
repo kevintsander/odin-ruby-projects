@@ -11,7 +11,7 @@ class GamePiece
              yellow: { id: 3, abbrev: 'Y', text_color: :black },
              green: { id: 4, abbrev: 'G', text_color: :black },
              blue: { id: 5, abbrev: 'B', text_color: :white },
-             magenta: { id: 6, abbrev:'M', text_color: :white } }.freeze
+             magenta: { id: 6, abbrev: 'M', text_color: :white } }.freeze
 
   def initialize(color)
     @color = self.class.check_color(color)
@@ -46,7 +46,7 @@ class GamePiece
     COLORS[color][:text_color]
   end
 
-  def display
-    " #{color_abbrev} ".colorize(background: color, color: text_color)
+  def display_text
+    " #{id} ".colorize(background: color, color: text_color)
   end
 end

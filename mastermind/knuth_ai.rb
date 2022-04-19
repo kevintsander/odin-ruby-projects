@@ -32,10 +32,14 @@ class KnuthAI
 
   def guess
     if @scoreboard.empty?
-      @all_possible_codes.sample
+      create_code
     else
       best_guess
     end
+  end
+
+  def create_code
+    @all_possible_codes.sample
   end
 
   private

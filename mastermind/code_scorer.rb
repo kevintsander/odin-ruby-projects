@@ -2,15 +2,7 @@
 
 # Represents a score for a code
 module CodeScorer
-  def item_exact_match?(code_ids, value, index)
-    code_ids[index] == value
-  end
-
-  def item_exists?(code_ids, value)
-    code_ids.any? { |code_value| code_value == value }
-  end
-
-  def calculate(code, guess)
+  def self.calculate(code, guess)
     size = code.size
     check_code = code.dup
     check_guess = guess.dup

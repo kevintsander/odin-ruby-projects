@@ -19,7 +19,7 @@ class GameCode
     @code.map(&:id)
   end
 
-  def display
-    @code.map(&:display).join(' ')
+  def text
+    @code.map(&:display_text).join(' ')
   end
 end
