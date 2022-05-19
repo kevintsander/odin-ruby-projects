@@ -1,9 +1,9 @@
 #frozen_string_literal: true
 
-require_relative 'game'
-require_relative 'game_display'
-require_relative 'game_exceptions'
-require_relative 'auto_word_loader'
+require_relative 'lib/game'
+require_relative 'lib/game_display'
+require_relative 'lib/game_exceptions'
+require_relative 'lib/auto_word_loader'
 
 
 word_loader_path = File.expand_path('../inputs/word-list.txt', __dir__)
