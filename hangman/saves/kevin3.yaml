@@ -1,0 +1,14 @@
+--- !ruby/object:Game
+word: correlation
+number_of_turns: 6
+guesses:
+- S
+- T
+- R
+- A
+- E
+- C
+- G
+- L
+- O
+- I

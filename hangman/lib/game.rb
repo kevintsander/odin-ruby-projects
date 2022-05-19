@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+require 'yaml'
 require_relative 'game_exceptions'
 
 class Game
-  attr_reader :guesses, :word, :number_of_turns
+  attr_accessor :guesses, :word, :number_of_turns
+
+  SAVE_DIR = File.expand_path('../saves/', __dir__)
 
   def initialize(word, number_of_turns = 6)
     @word = word
@@ -63,7 +67,6 @@ class Game
 
   def correct_guesses_text
     text = ''
-    p correct_guesses
     @word.chars.each_with_index do |letter, index|
       if correct_guesses.include?(letter.upcase)
         text += "\e[4m#{letter}\e[0m"
@@ -85,12 +88,34 @@ class Game
     text
   end
 
-  def save
-
+  def self.save_path(save_name)
+    File.join(SAVE_DIR, "#{save_name}.yaml")
   end
 
-  def load(id)
+  def save(save_name)
+    Dir.mkdir(SAVE_DIR) unless Dir.exist?(SAVE_DIR)
+    File.write(self.class.save_path(save_name), YAML.dump(self))
+  end
 
+  def self.existing_saves
+    if Dir.exists?(SAVE_DIR)
+      Dir[File.join(SAVE_DIR, "*.yaml")]
+    else
+      []
+    end
+  end
+
+  def self.save_exists?(save_name)
+    existing_saves.map { |save| File.basename(save_name, '.yaml') }.include?(save_name)
+  end
+
+  def self.load(save_name)
+    if save_exists?(save_name)
+      file = File.read(save_path(save_name))
+      YAML.load(file)
+    else
+      raise SaveDoesntExistError.new("Save #{save_name} doesn't exist")
+    end
   end
 
 end

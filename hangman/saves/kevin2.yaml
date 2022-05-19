@@ -1,0 +1,13 @@
+--- !ruby/object:Game
+word: prices
+number_of_turns: 6
+guesses:
+- L
+- S
+- T
+- R
+- A
+- E
+- I
+- F
+- D

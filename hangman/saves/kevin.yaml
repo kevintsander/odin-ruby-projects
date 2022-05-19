@@ -1,0 +1,6 @@
+--- !ruby/object:Game
+word: schemes
+number_of_turns: 6
+guesses:
+- A
+- S

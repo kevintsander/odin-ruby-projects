@@ -6,10 +6,9 @@ class GameDisplay
   end
 
   def result
-    puts @game.word
     correct
     hangman
-    all
+    all if @game.guesses.count > 0
     if @game.status == :win
       win
     elsif @game.status == :loss
@@ -81,7 +80,15 @@ class GameDisplay
   end
 
   def guess_prompt
-    puts 'Guess a letter:'
+    puts 'Guess a letter (or press 1 to save and exit):'
+  end
+
+  def save_prompt
+    puts 'Would you like to save? (Y = yes)'
+  end
+
+  def save_name_prompt
+    puts 'What do you want to name your save?'
   end
 
   def correct
