@@ -4,6 +4,7 @@
 class AutoWordLoader
   def initialize(filepath)
     @filepath = filepath
+    @words = nil
   end
 
   def word
@@ -14,7 +15,8 @@ class AutoWordLoader
 
   def words
     unless @words
-      lines = File.readlines(@filepath)
+      @words = []
+      lines = File.readlines(@filepath, chomp: true)
       lines.each { |line| @words.push(line) }
     end
     @words
