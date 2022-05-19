@@ -6,7 +6,7 @@ require_relative 'lib/game_exceptions'
 require_relative 'lib/auto_word_loader'
 
 
-word_loader_path = File.expand_path('../inputs/word-list.txt', __dir__)
+word_loader_path = File.expand_path('inputs/word-list.txt', __dir__)
 word_loader = AutoWordLoader.new(word_loader_path)
 #game = Game.new(word_loader.word)
 game = nil
