@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-class WordLoader
+# Represents a word loader which pulls a random word from a list of words
+class AutoWordLoader
   def initialize(filepath)
     @filepath = filepath
   end
 
-  def random_word
+  def word
     words.sample
   end
 
