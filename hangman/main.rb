@@ -1,14 +1,13 @@
-#frozen_string_literal: true
+# frozen_string_literal: true
 
 require_relative 'lib/game'
 require_relative 'lib/game_display'
 require_relative 'lib/game_exceptions'
 require_relative 'lib/auto_word_loader'
 
-
 word_loader_path = File.expand_path('inputs/word-list.txt', __dir__)
 word_loader = AutoWordLoader.new(word_loader_path)
-#game = Game.new(word_loader.word)
+
 game = nil
 def start_prompt
   puts 'Welcome to Hangman! Try to guess the word before you run out of tries!'
@@ -28,7 +27,7 @@ def clear
 end
 
 start_prompt
-if Game.existing_saves.count > 0
+if Game.existing_saves.count.positive?
   load_prompt
   if gets.chomp.upcase == 'Y'
     load_name_prompt
@@ -36,7 +35,7 @@ if Game.existing_saves.count > 0
     game = Game.load(load_name)
   end
 end
-game = Game.new(word_loader.word) unless game
+game ||= Game.new(word_loader.word)
 game_display = GameDisplay.new(game)
 
 game_display.result

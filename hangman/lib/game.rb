@@ -4,8 +4,9 @@ require 'fileutils'
 require 'yaml'
 require_relative 'game_exceptions'
 
+# Represents a hangman game
 class Game
-  attr_accessor :guesses, :word, :number_of_turns
+  attr_reader :guesses, :word, :number_of_turns
 
   SAVE_DIR = File.expand_path('../saves/', __dir__)
 
@@ -16,15 +17,10 @@ class Game
   end
 
   def guess(letter)
-    if valid_letter?(letter)
-      if already_guessed?(letter)
-        raise LetterAlreadyGuessedError.new("Letter #{letter} already guessed")
-      else
-        @guesses.push(letter.upcase)
-      end
-    else
-      raise NotALetterError.new("Invalid entry, must be a single letter A-Z")
-    end
+    raise NotALetterError.new('Invalid entry, must be a single letter A-Z') unless valid_letter?(letter)
+    raise LetterAlreadyGuessedError.new("Letter #{letter} already guessed") if already_guessed?(letter)
+
+    @guesses.push(letter.upcase)
   end
 
   def status
@@ -68,11 +64,11 @@ class Game
   def correct_guesses_text
     text = ''
     @word.chars.each_with_index do |letter, index|
-      if correct_guesses.include?(letter.upcase)
-        text += "\e[4m#{letter}\e[0m"
-      else
-        text += '_'
-      end
+      text += if correct_guesses.include?(letter.upcase)
+                "\e[4m#{letter}\e[0m"
+              else
+                '_'
+              end
     end
     text
   end
@@ -82,7 +78,7 @@ class Game
     @guesses.each_with_index do |guess, index|
       display_letter = guess
       display_letter = "\e[4m#{display_letter}\e[0m" if letter_match?(guess)
-      text += index == 0 ? '' : ' '
+      text += index.zero? ? '' : ' '
       text += display_letter
     end
     text
@@ -98,8 +94,8 @@ class Game
   end
 
   def self.existing_saves
-    if Dir.exists?(SAVE_DIR)
-      Dir[File.join(SAVE_DIR, "*.yaml")]
+    if Dir.exist?(SAVE_DIR)
+      Dir[File.join(SAVE_DIR, '*.yaml')]
     else
       []
     end
