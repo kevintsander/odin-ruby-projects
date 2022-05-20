@@ -46,7 +46,7 @@ class Game
   end
 
   def valid_letter?(letter)
-    letter.respond_to?(:to_s) && letter.size == 1
+    letter.respond_to?(:to_s) && letter.size.one? && letter.match?(/[A-Za-z]/)
   end
 
   def win?
