@@ -1,6 +1,6 @@
 def merge_sort(arr)
   size = arr.size
-  return arr.dup if size < 2
+  return arr if size < 2
 
   # size + 1 trick to round up odd numbered arrays
   split_index = ((size + 1) / 2) - 1
@@ -17,15 +17,15 @@ def merge_sort(arr)
   merge(left_sorted, right_sorted)
 end
 
-def merge(left_sorted, right_sorted)
+def merge(left, right)
   merged = []
-  while left_sorted.any? || right_sorted.any?
-    merged << if left_sorted.none?
-                right_sorted.shift
-              elsif right_sorted.none?
-                left_sorted.shift
+  while left.any? || right.any?
+    merged << if left.none?
+                right.shift
+              elsif right.none?
+                left.shift
               else
-                left_sorted.first < right_sorted.first ? left_sorted.shift : right_sorted.shift
+                left.first < right.first ? left.shift : right.shift
               end
   end
 
