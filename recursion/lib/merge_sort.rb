@@ -14,6 +14,10 @@ def merge_sort(arr)
   right_sorted = merge_sort(right)
 
   # merge the two halves
+  merge(left_sorted, right_sorted)
+end
+
+def merge(left_sorted, right_sorted)
   merged = []
   while left_sorted.any? || right_sorted.any?
     merged << if left_sorted.none?
@@ -28,4 +32,7 @@ def merge_sort(arr)
   merged
 end
 
-p merge_sort([4, 5, 2, 8, 3, 9, 1, 62, 18, 23, 12, 16, 45])
+#test arrays with random sizes and elements
+test_merge = Array.new(rand(10..50)) {rand(0..100)}
+puts "Original: #{test_merge}"
+puts "Sorted: #{merge_sort(test_merge)}"
