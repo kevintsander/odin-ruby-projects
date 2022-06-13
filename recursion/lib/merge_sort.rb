@@ -33,6 +33,6 @@ def merge(left, right)
 end
 
 #test arrays with random sizes and elements
-test_merge = Array.new(rand(10..50)) {rand(0..100)}
+test_merge = Array.new(rand(10..50)) { rand(0..100) }
 puts "Original: #{test_merge}"
 puts "Sorted: #{merge_sort(test_merge)}"
