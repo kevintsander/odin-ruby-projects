@@ -56,6 +56,50 @@ class Tree
     root 
   end
 
+  def level_order_iterate
+    queue = []
+    queue << @root
+    until queue.empty?
+      node = queue.shift
+      yield node.data
+      queue << node.left if node.left
+      queue << node.right if node.right
+    end
+  end
+
+  def level_order_recursive(node = @root, queue = [], &block)
+    yield node.data
+    queue << node.left if node.left
+    queue << node.right if node.right
+    return if queue.empty?
+
+    level_order_recursive(queue.shift, queue, &block)
+  end
+
+  def inorder(node = @root, &block)
+    return if node.nil?
+
+    inorder(node.left, &block)
+    yield node.data
+    inorder(node.right, &block)
+  end
+
+  def preorder(node = @root, &block)
+    return if node.nil?
+
+    yield node.data
+    preorder(node.left, &block)
+    preorder(node.right, &block)
+  end
+
+  def postorder(node = @root, &block)
+    return if node.nil?
+
+    postorder(node.left, &block)
+    postorder(node.right, &block)
+    yield node.data
+  end
+
   private
 
   # Builds a balanced binary search tree
