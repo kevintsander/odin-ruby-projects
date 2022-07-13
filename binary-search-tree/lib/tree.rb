@@ -57,8 +57,7 @@ class Tree
   end
 
   def level_order_iterate
-    queue = []
-    queue << @root
+    queue = [@root]
     until queue.empty?
       node = queue.shift
       yield node.data
@@ -76,6 +75,7 @@ class Tree
     level_order_recursive(queue.shift, queue, &block)
   end
 
+  # Inorder: left, root, right
   def inorder(node = @root, result = [], &block)
     return if node.nil?
 
@@ -86,6 +86,7 @@ class Tree
     result
   end
 
+  #Preorder: root, left, right
   def preorder(node = @root, result = [], &block)
     return if node.nil?
 
@@ -96,6 +97,7 @@ class Tree
     result
   end
 
+  #Postorder: left, right, root
   def postorder(node = @root, result = [], &block)
     return if node.nil?
 
@@ -106,9 +108,35 @@ class Tree
     result
   end
 
+  # Height is longest distance to a leaf node
+  def height(node = @root)
+    return -1 if node.nil?
+
+    # recursively find the length of each side
+    left_height = height(node.left)
+    right_height = height(node.right)
+
+    # this height is one higher than the longer of left & right
+    [left_height, right_height].max + 1
+  end
+
+  # Height is the distance from the root to the node
+  def depth(node, cur_node = @root, depth = 0)
+    return if cur_node.nil?
+    return depth if node == cur_node
+
+    depth = if node.data < cur_node.data
+              depth(node, cur_node.left, depth + 1)
+            elsif node.data > cur_node.data
+              depth(node, cur_node.right, depth + 1)
+            end
+
+    depth
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
-    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data }(h#{height(node)}, d#{depth(node)})"
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
 
