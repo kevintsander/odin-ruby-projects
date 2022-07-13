@@ -134,6 +134,19 @@ class Tree
     depth
   end
 
+  # A tree is balanced when the difference between 
+  # heights of left subtree and right subtree of every node is not more than 1
+  def balanced?
+    balanced = true
+    preorder do |node|
+      if (height(node.left) - height(node.right)).abs > 1
+        balanced = false
+        next
+      end
+    end
+    balanced
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data }(h#{height(node)}, d#{depth(node)})"
