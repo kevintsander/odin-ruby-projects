@@ -56,23 +56,27 @@ class Tree
     root 
   end
 
-  def level_order_iterate
+  def level_order_iterate(result = [])
     queue = [@root]
     until queue.empty?
       node = queue.shift
-      yield node.data
+      yield node if block_given?
+      result << node.data
       queue << node.left if node.left
       queue << node.right if node.right
     end
+    result
   end
 
-  def level_order_recursive(node = @root, queue = [], &block)
-    yield node.data
+  def level_order_recursive(node = @root, queue = [], result = [], &block)
+    yield node if block_given?
+    result << node.data
     queue << node.left if node.left
     queue << node.right if node.right
     return if queue.empty?
 
-    level_order_recursive(queue.shift, queue, &block)
+    level_order_recursive(queue.shift, queue, result, &block)
+    result
   end
 
   # Inorder: left, root, right
