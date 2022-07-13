@@ -76,28 +76,34 @@ class Tree
     level_order_recursive(queue.shift, queue, &block)
   end
 
-  def inorder(node = @root, &block)
+  def inorder(node = @root, result = [], &block)
     return if node.nil?
 
-    inorder(node.left, &block)
-    yield node.data
-    inorder(node.right, &block)
+    inorder(node.left, result, &block)
+    yield node if block_given?
+    result << node.data
+    inorder(node.right, result, &block)
+    result
   end
 
-  def preorder(node = @root, &block)
+  def preorder(node = @root, result = [], &block)
     return if node.nil?
 
-    yield node.data
-    preorder(node.left, &block)
-    preorder(node.right, &block)
+    yield node if block_given?
+    result << node.data
+    preorder(node.left, result, &block)
+    preorder(node.right, result, &block)
+    result
   end
 
-  def postorder(node = @root, &block)
+  def postorder(node = @root, result = [], &block)
     return if node.nil?
 
-    postorder(node.left, &block)
-    postorder(node.right, &block)
-    yield node.data
+    postorder(node.left, result, &block)
+    postorder(node.right, result, &block)
+    yield node.data if block_given?
+    result << node.data
+    result
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
