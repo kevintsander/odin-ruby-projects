@@ -8,7 +8,7 @@ def knight_moves(startc, endc)
 
   # Traverse until the latest move matches the end coordinate
   until moves.last == endc
-    # for each possible move, add the new move to a copy of the current move list
+    # for each possible move, add the new move to a copy of the current move list and then add to the queue
     Knight::ALLOWED_MOVES.each do |movec|
       newc = move(moves.last, movec)
       if inbounds(newc) && !moves.include?(newc)
