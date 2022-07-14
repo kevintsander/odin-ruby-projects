@@ -6,12 +6,13 @@ def knight_moves(startc, endc)
   queue = [] # queue will contain move paths
   moves = [startc] # current move path
 
+  # Traverse until the latest move matches the end coordinate
   until moves.last == endc
     # for each possible move, add the new move to a copy of the current move list
     Knight::ALLOWED_MOVES.each do |movec|
       newc = move(moves.last, movec)
       if inbounds(newc) && !moves.include?(newc)
-        queue << (moves.dup << newc) # copy the current list of moves, add the possible move, and update the queue
+        queue << (moves.dup << newc)
       end
     end
     moves = queue.shift
