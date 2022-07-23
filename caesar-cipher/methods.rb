@@ -1,4 +1,6 @@
 def caesar_cipher(the_string, shift)
+    return nil if the_string.nil? || shift.nil?
+
     str_arr = the_string.split('')
     new_arr = str_arr.map do |letter|
         info = {}
