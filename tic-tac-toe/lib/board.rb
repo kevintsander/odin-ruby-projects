@@ -43,9 +43,7 @@ class TicTacToeBoard
     @board.each_with_index do |row, row_i|
       rowtext = ''
       row.each_with_index do |item, col_i|
-        puts "item: #{item}"
         rowtext += item.nil? ? '   ' : " #{item} "
-        puts "col_i: #{col_i} row size: #{row.size}"
         col_i != row.size - 1 && rowtext += '|'
       end
       text += rowtext
