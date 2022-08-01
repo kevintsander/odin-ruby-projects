@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'board'
+require './lib/board'
 
 # Represents a tic-tac-toe game
 class TicTacToeGame
@@ -53,6 +53,3 @@ class TicTacToeGame
     display_board
   end
 end
-
-game = TicTacToeGame.new('O', 'X')
-game.play_game
