@@ -4,10 +4,10 @@ require './lib/board'
 
 # Represents a tic-tac-toe game
 class TicTacToeGame
-  def initialize(player1, player2)
+  def initialize(player1, player2, board = TicTacToeBoard.new)
     @player1 = player1
     @player2 = player2
-    @board = TicTacToeBoard.new
+    @board = board
   end
 
   private
