@@ -47,9 +47,4 @@ class TicTacToeGame
       return win_message(@player2) if @board.won?
     end
   end
-
-  def update_board(player, row, column)
-    @board.board[row][column] = player
-    display_board
-  end
 end
