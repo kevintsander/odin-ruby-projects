@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../board'
+require '.lib/board'
 
 describe TicTacToeBoard do
   subject(:board) { described_class.new }
