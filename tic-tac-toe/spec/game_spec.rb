@@ -52,4 +52,51 @@ describe TicTacToeGame do
       end
     end
   end
+
+  describe '#play_game' do
+    context 'player 1 wins on third turn' do
+      before do
+        allow(board).to receive(:won?).and_return(false, false, false, false, false, false, false, true)
+        allow(game).to receive(:play_turn)
+        allow(game).to receive(:win_message)
+      end
+
+      it 'sends a player 1 win message' do
+        expect(game).to receive(:win_message).with('X').once
+        game.play_game
+      end
+
+      it 'player 1 gets 3 turns' do
+        expect(game).to receive(:play_turn).with('X').exactly(3).times
+        game.play_game
+      end
+
+      it 'player 2 gets two turns' do
+        expect(game).to receive(:play_turn).with('O').twice
+        game.play_game
+      end
+    end
+    context 'player 2 wins on third turn' do
+      before do
+        allow(board).to receive(:won?).and_return(false, false, false, false, false, false, false, false, true)
+        allow(game).to receive(:play_turn)
+        allow(game).to receive(:win_message)
+      end
+
+      it 'sends a player 2 win message' do
+        expect(game).to receive(:win_message).with('O').once
+        game.play_game
+      end
+
+      it 'player 1 gets 3 turns' do
+        expect(game).to receive(:play_turn).with('X').exactly(3).times
+        game.play_game
+      end
+
+      it 'player 2 gets 3 turns' do
+        expect(game).to receive(:play_turn).with('O').exactly(3).times
+        game.play_game
+      end
+    end
+  end
 end
