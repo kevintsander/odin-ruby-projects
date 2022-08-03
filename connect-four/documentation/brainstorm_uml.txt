@@ -1,0 +1,26 @@
+@startuml
+class Player {
++name
++color
++get_turn_input()
+}
+
+class Game {
++play_game()
++play_turn()
++game_over?()
++display_turn()
++validate_turn_input()
+}
+
+class Board {
+-row_count
+-column_count
++new(row_count, column_count)
++add_piece(player, column)
++display()
+}
+
+Game --> Board
+Game --> Player
+@enduml
