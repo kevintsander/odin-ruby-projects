@@ -1,0 +1,30 @@
+# Introduction
+# Ask for player names
+
+
+
+# Start the game
+# Loop until four_in_a_row or full
+#   PlayTurn
+#   Check four in a row
+#     if yes - set winner to return of PlayTurn & game state to game over
+# If loop exits without a winner, set game state to draw
+
+# PlayTurn
+#   Get input from current player
+#   Validate input
+#   Update board
+#   Switch current player
+#   Return last player
+#
+
+# DisplayTurn
+#   PlayTurn
+#   Display board
+#
+
+# DisplayGame
+# until four in a row or board full
+#    DisplayTurn
+#    Display win/draw
+#    Play again?
