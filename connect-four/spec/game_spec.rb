@@ -92,4 +92,45 @@ describe Game do
       end
     end
   end
+
+  describe '#get_player_name' do
+    let(:board) { double('board') }
+    let(:player) { double('player') }
+    subject(:game_name) { described_class.new(board) }
+
+    it 'prompts user for name and returns it capitalized' do
+      allow(game_name).to receive(:puts)
+      allow(game_name).to receive(:gets).and_return("kevin\n")
+      result = game_name.get_player_name(1)
+      expect(result).to eq('Kevin')
+    end
+  end
+
+  describe '#validate_player_piece' do
+    context 'one character entered' do
+      xit 'returns token' do
+      end
+    end
+    context 'zero or multiple characters entered' do
+      xit 'returns '
+    end
+  end
+
+  describe '#setup_player' do
+    context 'game piece not taken' do
+      xit 'prompts for name once' do
+      end
+      xit 'prompts for game piece once' do
+      end
+      xit 'creates a new instance of player and sets instance variable' do
+      end
+    end
+  end
+
+  describe '#play_turn' do
+    xit 'switches players' do
+    end
+    xit 'sends #add_piece to board' do
+    end
+  end
 end
