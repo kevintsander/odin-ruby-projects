@@ -26,16 +26,78 @@ describe Board do
       end
     end
   end
-end
 
-describe '#connect_four_column?' do
-  context 'connecting four of same piece in a column' do
-    xit 'returns true' do
+  describe '#four_in_a_row?' do
+    subject(:board_four) { described_class.new }
+
+    context 'four of same piece adjacent in a row' do
+      before do
+        allow(board_four).to receive(:matrix).and_return(
+          [[nil, nil, nil, nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil],
+           [nil, nil, '⚫', '⚫', '⚫', '⚫', nil],
+           [nil, nil, nil, nil, nil, nil, nil]]
+        )
+      end
+
+      it 'returns true' do
+        result = board_four.four_in_a_row?
+        expect(result).to be(true)
+      end
     end
-  end
 
-  context 'not four pieces connected in a column' do
-    xit 'returns false' do
+    context 'four of same piece adjacent in a column' do
+      before do
+        allow(board_four).to receive(:matrix).and_return(
+          [[nil, nil, nil, nil, nil, nil, nil],
+           [nil, nil, '⚫', nil, nil, nil, nil],
+           [nil, nil, '⚫', nil, nil, nil, nil],
+           [nil, nil, '⚫', nil, nil, nil, nil],
+           [nil, nil, '⚫', nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil]]
+        )
+      end
+      it 'returns true' do
+        result = board_four.four_in_a_row?
+        expect(result).to be(true)
+      end
+    end
+
+    context 'four of same piece adjacent in diagonally' do
+      before do
+        allow(board_four).to receive(:matrix).and_return(
+          [[nil, nil, nil, '⚫', nil, nil, nil],
+           [nil, nil, '⚫', nil, nil, nil, nil],
+           [nil, '⚫', nil, nil, nil, nil, nil],
+           ['⚫', nil, nil, nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil]]
+        )
+      end
+      it 'returns true' do
+        result = board_four.four_in_a_row?
+        expect(result).to be(true)
+      end
+    end
+
+    context 'not four adjacent pieces in any direction' do
+      before do
+        allow(board_four).to receive(:matrix).and_return(
+          [['⚫', '⚫', '⚪', '⚫', nil, nil, nil],
+           ['⚪', '⚪', '⚪', nil, nil, nil, nil],
+           ['⚫', '⚫', '⚫', nil, nil, nil, nil],
+           ['⚫', nil, '⚪', nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil]]
+        )
+      end
+
+      it 'returns false' do
+        result = board_four.four_in_a_row?
+        expect(result).to be(false)
+      end
     end
   end
 end
