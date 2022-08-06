@@ -19,7 +19,7 @@ describe Game do
       it 'throws out of bounds error' do
         input = '9'
         expect { game_validate.validate_column_input(input) }
-          .to raise_error(Game::OutOfBoundsInputError)
+          .to raise_error(RangeError)
       end
     end
 
@@ -106,13 +106,111 @@ describe Game do
     end
   end
 
-  describe '#validate_player_piece' do
-    context 'one character entered' do
-      xit 'returns token' do
+  describe '#validate_game_piece' do
+    let(:player1) { double('player', piece: '⚫') }
+    let(:player2) { double('player', piece: nil) }
+    let(:board) { double('board') }
+    subject(:game_validate) { described_class.new(board) }
+
+    before do
+      game_validate.instance_variable_set(:@player1, player1)
+      game_validate.instance_variable_set(:@player2, player2)
+      allow(player1).to receive(:piece)
+      allow(player2).to receive(:piece)
+    end
+
+    context '1, b, or black entered' do
+      it 'returns ⚫' do
+        %w[1 b black].each do |input|
+          result = game_validate.validate_game_piece(input)
+          expect(result).to eq('⚫')
+        end
       end
     end
-    context 'zero or multiple characters entered' do
-      xit 'returns '
+
+    context '2, w, or white entered' do
+      it 'returns ⚫' do
+        %w[2 w white].each do |input|
+          result = game_validate.validate_game_piece(input)
+          expect(result).to eq('⚪')
+        end
+      end
+    end
+
+    context 'one character entered' do
+      it 'returns piece' do
+        result = game_validate.validate_game_piece('⚫')
+        expect(result).to eq('⚫')
+      end
+    end
+
+    context 'nothing or multiple characters entered' do
+      it 'raises error' do
+        input = '⚫⚪'
+        expect { game_validate.validate_game_piece(input) }
+          .to raise_error(ArgumentError)
+        input = ''
+        expect { game_validate.validate_game_piece(input) }
+          .to raise_error(ArgumentError)
+      end
+    end
+
+    context 'nothing entered' do
+      it 'raises error' do
+        input = ''
+        expect { game_validate.validate_game_piece(input) }
+          .to raise_error(ArgumentError)
+      end
+    end
+
+    context 'space entered' do
+      it 'raises error' do
+        input = ' '
+        expect { game_validate.validate_game_piece(input) }
+          .to raise_error(ArgumentError)
+      end
+    end
+
+    context 'piece already taken' do
+      it 'raises error' do
+        allow(player1).to receive(:piece).and_return('⚫')
+        allow(game_validate).to receive(:game_piece_taken).and_return(true)
+        input = '⚫'
+        expect { game_validate.validate_game_piece(input) }
+          .to raise_error(ArgumentError)
+      end
+    end
+  end
+
+  describe '#get_player_game_piece' do
+    let(:board) { double('board') }
+    subject(:game_piece) { described_class.new(board) }
+
+    context 'valid game piece entered' do
+      it 'asks for piece once and returns it' do
+        allow(game_piece).to receive(:validate_game_piece).and_return('⚫')
+        allow(game_piece).to receive(:puts)
+        expect(game_piece).to receive(:gets).and_return('')
+
+        result = game_piece.get_player_game_piece('Kevin')
+        expect(result).to eq('⚫')
+      end
+    end
+
+    context 'invalid game piece entered, then valid' do
+      it 'ask for input twice and return' do
+        calls = 0
+        allow(game_piece).to receive(:validate_game_piece) do
+          calls += 1
+          raise ArgumentError if calls == 1
+
+          '⚫'
+        end
+        allow(game_piece).to receive(:gets).and_return('')
+        expect(game_piece).to receive(:gets).twice
+        result = game_piece.get_player_game_piece('Kevin')
+        expect(result).to eq('⚫')
+      end
     end
   end
 
