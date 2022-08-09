@@ -186,10 +186,13 @@ describe Game do
     let(:board) { double('board') }
     subject(:game_piece) { described_class.new(board) }
 
+    before do
+      allow(game_piece).to receive(:puts)
+    end
+
     context 'valid game piece entered' do
       it 'asks for piece once and returns it' do
         allow(game_piece).to receive(:validate_game_piece).and_return('⚫')
-        allow(game_piece).to receive(:puts)
         expect(game_piece).to receive(:gets).and_return('')
 
         result = game_piece.get_player_game_piece('Kevin')
@@ -252,12 +255,55 @@ describe Game do
   end
 
   describe '#display_game' do
+    let(:player1) { double('player', name: 'Kevin', piece: '⚫') }
+    let(:player2) { double('player', name: 'Ivy', piece: '⚪') }
+    let(:board) { double('board') }
+    subject(:game_display) { described_class.new(board) }
+
+    before do
+      game_display.instance_variable_set(:@player1, player1)
+      game_display.instance_variable_set(:@player2, player2)
+      allow(board).to receive(:add_piece)
+    end
+
     context 'game is full' do
-      xit 'game ends in a draw' do
+      before do
+        allow(board).to receive(:four_in_a_row?).and_return(false)
+        allow(board).to receive(:full?).and_return(true)
+        allow(game_display).to receive(:draw)
+      end
+
+      it 'game ends in a draw' do
+        expect(game_display).to receive(:draw).once
+        game_display.display_game
       end
     end
-    context 'game has four in a row' do
-      xit 'game ends with a winner' do
+
+    context 'game has four in a row after player1 turn' do
+      before do
+        allow(board).to receive(:four_in_a_row?).and_return(true)
+        allow(board).to receive(:full?).and_return(false)
+        allow(game_display).to receive(:winner)
+        allow(game_display).to receive(:puts)
+      end
+
+      it 'game ends with player1 as winner' do
+        expect(game_display).to receive(:winner).with(player1).once
+        game_display.display_game
+      end
+    end
+
+    context 'game has four in a row after player2 turn' do
+      before do
+        allow(board).to receive(:four_in_a_row?).and_return(false, true)
+        allow(board).to receive(:full?).and_return(false)
+        allow(game_display).to receive(:winner)
+        allow(game_display).to receive(:puts)
+      end
+
+      it 'game ends with player2 as winner' do
+        expect(game_display).to receive(:winner).with(player2).once
+        game_display.display_game
       end
     end
   end

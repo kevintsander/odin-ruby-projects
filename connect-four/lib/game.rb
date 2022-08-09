@@ -21,6 +21,29 @@ class Game
     Player.new(name, piece)
   end
 
+  def display_game
+    @current_player = player1
+    loop do
+      this_player = @current_player
+      play_turn
+      if board.four_in_a_row?
+        winner(this_player)
+        break
+      elsif board.full?
+        draw
+        break
+      end
+    end
+  end
+
+  def draw
+    puts 'Board is full! Game is a draw.'
+  end
+
+  def winner(player)
+    puts "CONNECT FOUR! #{player.name} wins!!!"
+  end
+
   def play_turn
     board.add_piece(@current_player.piece)
     @current_player = get_next_player
