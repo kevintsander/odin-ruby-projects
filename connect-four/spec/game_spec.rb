@@ -75,7 +75,8 @@ describe Game do
       it 'prompts user for input twice' do
         expect(game_input).to receive(:gets).twice
         game_input.get_column_input(player)
-        board.display
+      end
+
       it 'displays out of bounds error message then returns input' do
         error_msg = 'Out of bounds, must select non-full row between 0 and 6'
         expect(game_input).to receive(:puts).with(error_msg).once
@@ -113,14 +114,35 @@ describe Game do
     it 'prompts user for name and returns it capitalized' do
       allow(game_name).to receive(:puts)
       allow(game_name).to receive(:gets).and_return("kevin\n")
-      board.display
+      result = game_name.get_player_name(1)
+      expect(result).to eq('Kevin')
+    end
+  end
+
+  describe '#validate_game_piece' do
+    let(:player1) { double('player', piece: '⚫') }
+    let(:player2) { double('player', piece: nil) }
+    let(:board) { double('board') }
+    subject(:game_validate) { described_class.new(board) }
+
+    before do
+      game_validate.instance_variable_set(:@player1, player1)
       game_validate.instance_variable_set(:@player2, player2)
       allow(player1).to receive(:piece)
       allow(player2).to receive(:piece)
-      board.display
+    end
 
-    context '2, w, or white entered' do
-      it 'returns ⚫' do
+    context '0, b, or black entered' do
+      it 'returns ' do
+        %w[0 b black].each do |input|
+          result = game_validate.validate_game_piece(input)
+          expect(result).to eq('⚫')
+        end
+      end
+    end
+
+    context '1, w, or white entered' do
+      it 'returns ⚪' do
         %w[1 w white].each do |input|
           result = game_validate.validate_game_piece(input)
           expect(result).to eq('⚪')
@@ -128,45 +150,15 @@ describe Game do
       end
     end
 
-    context 'one character entered' do
-      it 'returns piece' do
-        result = game_validate.validate_game_piece('⚫')
-        expect(result).to eq('⚫')
-      end
-    end
-
-    context 'nothing or multiple characters entered' do
+    context 'invalid entry' do
       it 'raises error' do
+        input = 'z'
+        expect { game_validate.validate_game_piece(input) }
+          .to raise_error(ArgumentError)
         input = '⚫⚪'
         expect { game_validate.validate_game_piece(input) }
           .to raise_error(ArgumentError)
         input = ''
-        expect { game_validate.validate_game_piece(input) }
-          .to raise_error(ArgumentError)
-      end
-    end
-
-    context 'nothing entered' do
-      it 'raises error' do
-        input = ''
-        expect { game_validate.validate_game_piece(input) }
-          .to raise_error(ArgumentError)
-      end
-    end
-
-    context 'space entered' do
-      it 'raises error' do
-        input = ' '
-        expect { game_validate.validate_game_piece(input) }
-          .to raise_error(ArgumentError)
-      end
-    end
-
-    context 'piece already taken' do
-      it 'raises error' do
-        allow(player1).to receive(:piece).and_return('⚫')
-        allow(game_validate).to receive(:game_piece_taken).and_return(true)
-        input = '⚫'
         expect { game_validate.validate_game_piece(input) }
           .to raise_error(ArgumentError)
       end
@@ -204,6 +196,37 @@ describe Game do
         expect(game_piece).to receive(:gets).twice
         result = game_piece.get_player_game_piece('Kevin')
         expect(result).to eq('⚫')
+      end
+    end
+  end
+
+  describe '#get_other_game_piece' do
+    let(:board) { double('board') }
+    let(:player1) { double('player1') }
+    subject(:game_other) { described_class.new(board) }
+
+    before do
+      game_other.instance_variable_set(:@player1, player1)
+      allow(game_other).to receive(:puts)
+    end
+
+    context 'player 1 selected ⚪' do
+      it 'returns ⚫' do
+        allow(player1).to receive(:name).and_return('Kevin')
+        allow(player1).to receive(:piece).and_return('⚪')
+        game_other.instance_variable_set(:@player1, player1)
+        result = game_other.get_other_game_piece('Ivy')
+        expect(result).to eq('⚫')
+      end
+    end
+
+    context 'player 1 selected ⚫' do
+      it 'returns ⚪' do
+        allow(player1).to receive(:name).and_return('Kevin')
+        allow(player1).to receive(:piece).and_return('⚫')
+        game_other.instance_variable_set(:@player1, player1)
+        result = game_other.get_other_game_piece('Ivy')
+        expect(result).to eq('⚪')
       end
     end
   end

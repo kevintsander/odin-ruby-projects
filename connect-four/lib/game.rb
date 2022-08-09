@@ -20,7 +20,7 @@ class Game
 
   def setup_player(player_id)
     name = get_player_name(player_id)
-    piece = get_player_game_piece(name)
+    piece = player_id == 1 ? get_player_game_piece(name) : get_other_game_piece(name)
     Player.new(name, piece)
   end
 
@@ -111,21 +111,29 @@ class Game
     piece
   end
 
+  def get_other_game_piece(player_name)
+    return unless player1
+
+    piece = case player1.piece
+            when '⚫'
+              '⚪'
+            when '⚪'
+              '⚫'
+            end
+    puts "#{player_name} will be #{piece}."
+    piece
+  end
+
   def validate_game_piece(input)
-    raise ArgumentError, 'Game piece already taken.' if game_piece_taken(input)
+    valid_input = '⚫' if %w[0 b black ⚫].include?(input)
+    valid_input = '⚪' if %w[1 w white ⚪].include?(input)
 
-    input = '⚫' if %w[0 b black].include?(input)
-    input = '⚪' if %w[1 w white].include?(input)
-    return input.downcase if input.size == 1 && input.match(/\S/)
+    raise ArgumentError, 'Must enter 0 or 1!' unless valid_input
 
-    raise ArgumentError, 'Game piece must be one non-space character long.'
+    valid_input
   end
 
   private
-
-  def game_piece_taken(input)
-    [player1&.piece, player2&.piece].include?(input)
-  end
 
   def get_next_player
     @current_player = @player1 == @current_player ? @player2 : @player1
