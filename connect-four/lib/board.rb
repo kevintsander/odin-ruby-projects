@@ -31,6 +31,10 @@ class Board
     false
   end
 
+  def full?
+    matrix.flatten.none?(&:nil?)
+  end
+
   private
 
   # Tests if there is four in a row starting from a specified location

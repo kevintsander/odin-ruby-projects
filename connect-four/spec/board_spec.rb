@@ -100,4 +100,42 @@ describe Board do
       end
     end
   end
+
+  describe '#full?' do
+    subject(:board_full) { described_class.new }
+
+    context 'board is not full' do
+      before do
+        allow(board_full).to receive(:matrix).and_return(
+          [['⚫', '⚫', '⚪', '⚫', nil, nil, nil],
+           ['⚪', '⚪', '⚪', nil, nil, nil, nil],
+           ['⚫', '⚫', '⚫', nil, nil, nil, nil],
+           ['⚫', nil, '⚪', nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil],
+           [nil, nil, nil, nil, nil, nil, nil]]
+        )
+      end
+
+      it 'returns false' do
+        expect(board_full).not_to be_full
+      end
+    end
+
+    context 'board is full' do
+      before do
+        allow(board_full).to receive(:matrix).and_return(
+          [['⚫', '⚫', '⚪', '⚫', '⚪', '⚫', '⚪'],
+           ['⚪', '⚪', '⚪', '⚫', '⚫', '⚪', '⚪'],
+           ['⚫', '⚫', '⚫', '⚪', '⚫', '⚫', '⚫'],
+           ['⚫', '⚪', '⚪', '⚫', '⚪', '⚫', '⚪'],
+           ['⚫', '⚪', '⚫', '⚫', '⚪', '⚪', '⚫'],
+           ['⚪', '⚫', '⚪', '⚪', '⚫', '⚪', '⚪']]
+        )
+      end
+
+      it 'returns true' do
+        expect(board_full).to be_full
+      end
+    end
+  end
 end
