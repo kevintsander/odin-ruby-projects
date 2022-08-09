@@ -121,7 +121,7 @@ describe Game do
 
     context '1, b, or black entered' do
       it 'returns ⚫' do
-        %w[1 b black].each do |input|
+        %w[0 b black].each do |input|
           result = game_validate.validate_game_piece(input)
           expect(result).to eq('⚫')
         end
@@ -130,7 +130,7 @@ describe Game do
 
     context '2, w, or white entered' do
       it 'returns ⚫' do
-        %w[2 w white].each do |input|
+        %w[1 w white].each do |input|
           result = game_validate.validate_game_piece(input)
           expect(result).to eq('⚪')
         end
@@ -233,7 +233,7 @@ describe Game do
   describe '#play_turn' do
     let(:player1) { double('player', name: 'Kevin', piece: '⚫') }
     let(:player2) { double('player', name: 'Ivy', piece: '⚪') }
-    let(:board) { double('board') }
+    let(:board) { double('board', rows: 6, columns: 7) }
     subject(:game_turn) { described_class.new(board) }
 
     before do
@@ -241,6 +241,8 @@ describe Game do
       game_turn.instance_variable_set(:@player1, player1)
       game_turn.instance_variable_set(:@player2, player2)
       allow(board).to receive(:add_piece)
+      allow(game_turn).to receive(:puts)
+      allow(game_turn).to receive(:gets).and_return("1\n")
     end
 
     it 'switches players' do
@@ -249,21 +251,22 @@ describe Game do
     end
 
     it "sends #add_piece with player's piece to board" do
-      expect(board).to receive(:add_piece).with('⚫').once
+      expect(board).to receive(:add_piece).with('⚫', 1).once
       game_turn.play_turn
     end
   end
 
   describe '#display_game' do
-    let(:player1) { double('player', name: 'Kevin', piece: '⚫') }
-    let(:player2) { double('player', name: 'Ivy', piece: '⚪') }
-    let(:board) { double('board') }
+    let(:player1) { double('player1', name: 'Kevin', piece: '⚫') }
+    let(:player2) { double('player2', name: 'Ivy', piece: '⚪') }
+    let(:board) { double('board', rows: 6, columns: 7) }
     subject(:game_display) { described_class.new(board) }
 
     before do
       game_display.instance_variable_set(:@player1, player1)
       game_display.instance_variable_set(:@player2, player2)
       allow(board).to receive(:add_piece)
+      allow(game_display).to receive(:get_column_input).and_return(1)
     end
 
     context 'game is full' do

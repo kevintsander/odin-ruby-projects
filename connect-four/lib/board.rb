@@ -35,6 +35,12 @@ class Board
     matrix.flatten.none?(&:nil?)
   end
 
+  def display
+    display_header
+    display_grid
+    display_footer
+  end
+
   private
 
   # Tests if there is four in a row starting from a specified location
@@ -63,5 +69,36 @@ class Board
     row = 0
     row += 1 while @matrix[row][column] && row < rows
     row
+  end
+
+  def display_grid
+    # want to reverse grid display
+    (rows - 1).downto(0) { |row| puts row_text(row) }
+  end
+
+  def row_text(row)
+    text = ''
+    columns.times do |col|
+      text += cell_text(row, col)
+    end
+    text
+  end
+
+  def cell_text(row, col)
+    pretext = col.zero? ? '|' : ''
+    piece = matrix[row][col]
+    piecetext = piece || '  '
+    posttext = col == columns - 1 ? '|' : ''
+    pretext + piecetext + posttext
+  end
+
+  def display_header
+    puts columns.times do |index|
+      " #{index}"
+    end
+  end
+
+  def display_footer
+    puts '‾' * 2 * columns
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require './lib/player'
+require 'io/console'
 
 # Represents a Connect Four game
 class Game
@@ -25,7 +26,7 @@ class Game
     @current_player = player1
     loop do
       this_player = @current_player
-      play_turn
+      display_turn
       if board.four_in_a_row?
         winner(this_player)
         break
@@ -44,8 +45,14 @@ class Game
     puts "CONNECT FOUR! #{player.name} wins!!!"
   end
 
+  def display_turn
+    play_turn
+    $stdout.clear_screen
+    board.display
+  end
+
   def play_turn
-    board.add_piece(@current_player.piece)
+    board.add_piece(@current_player.piece, get_column_input(@current_player))
     @current_player = get_next_player
   end
 
@@ -97,8 +104,8 @@ class Game
   def validate_game_piece(input)
     raise ArgumentError, 'Game piece already taken.' if game_piece_taken(input)
 
-    input = '⚫' if %w[1 b black].include?(input)
-    input = '⚪' if %w[2 w white].include?(input)
+    input = '⚫' if %w[0 b black].include?(input)
+    input = '⚪' if %w[1 w white].include?(input)
     return input.downcase if input.size == 1 && input.match(/\S/)
 
     raise ArgumentError, 'Game piece must be one non-space character long.'
@@ -107,7 +114,7 @@ class Game
   private
 
   def game_piece_taken(input)
-    [player1.piece, player2.piece].include?(input)
+    [player1&.piece, player2&.piece].include?(input)
   end
 
   def get_next_player
