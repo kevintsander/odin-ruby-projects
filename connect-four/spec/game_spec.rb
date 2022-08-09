@@ -283,7 +283,6 @@ describe Game do
       before do
         allow(board).to receive(:four_in_a_row?).and_return(true)
         allow(board).to receive(:full?).and_return(false)
-        allow(game_display).to receive(:winner)
         allow(game_display).to receive(:puts)
       end
 
@@ -297,7 +296,6 @@ describe Game do
       before do
         allow(board).to receive(:four_in_a_row?).and_return(false, true)
         allow(board).to receive(:full?).and_return(false)
-        allow(game_display).to receive(:winner)
         allow(game_display).to receive(:puts)
       end
 
