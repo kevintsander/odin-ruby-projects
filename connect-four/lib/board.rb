@@ -93,9 +93,11 @@ class Board
   end
 
   def display_header
-    puts columns.times do |index|
-      " #{index}"
+    text = ''
+    columns.times do |index|
+      text += " #{index}"
     end
+    puts text
   end
 
   def display_footer
