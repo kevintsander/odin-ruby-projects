@@ -75,8 +75,7 @@ describe Game do
       it 'prompts user for input twice' do
         expect(game_input).to receive(:gets).twice
         game_input.get_column_input(player)
-      end
-
+        board.display
       it 'displays out of bounds error message then returns input' do
         error_msg = 'Out of bounds, must select non-full row between 0 and 6'
         expect(game_input).to receive(:puts).with(error_msg).once
@@ -114,32 +113,11 @@ describe Game do
     it 'prompts user for name and returns it capitalized' do
       allow(game_name).to receive(:puts)
       allow(game_name).to receive(:gets).and_return("kevin\n")
-      result = game_name.get_player_name(1)
-      expect(result).to eq('Kevin')
-    end
-  end
-
-  describe '#validate_game_piece' do
-    let(:player1) { double('player', piece: '⚫') }
-    let(:player2) { double('player', piece: nil) }
-    let(:board) { double('board') }
-    subject(:game_validate) { described_class.new(board) }
-
-    before do
-      game_validate.instance_variable_set(:@player1, player1)
+      board.display
       game_validate.instance_variable_set(:@player2, player2)
       allow(player1).to receive(:piece)
       allow(player2).to receive(:piece)
-    end
-
-    context '1, b, or black entered' do
-      it 'returns ⚫' do
-        %w[0 b black].each do |input|
-          result = game_validate.validate_game_piece(input)
-          expect(result).to eq('⚫')
-        end
-      end
-    end
+      board.display
 
     context '2, w, or white entered' do
       it 'returns ⚫' do

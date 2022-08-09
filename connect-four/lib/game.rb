@@ -12,6 +12,8 @@ class Game
   end
 
   def setup_players
+    @player1 = nil
+    @player2 = nil
     @player1 = setup_player(1)
     @player2 = setup_player(2)
   end
@@ -20,6 +22,12 @@ class Game
     name = get_player_name(player_id)
     piece = get_player_game_piece(name)
     Player.new(name, piece)
+  end
+
+  def play
+    display_intro
+    setup_players
+    display_game
   end
 
   def display_game
@@ -121,5 +129,15 @@ class Game
 
   def get_next_player
     @current_player = @player1 == @current_player ? @player2 : @player1
+  end
+
+  def display_intro
+    puts <<~INTRO
+      Welcome to CONNECT FOUR!#{' '}
+      The rules are simple:
+      - Players take turns placing tokens in the slots
+      - First player to get four-in a row horizontally, vertically, or diagonally wins!
+      - If no players get four in a row before the board fills up, its a draw.
+    INTRO
   end
 end
