@@ -1,14 +1,30 @@
 # frozen_string_literal: true
 
+require './lib/player'
+
 # Represents a Connect Four game
 class Game
-  attr_reader :board, :player1, :player2
+  attr_reader :board, :player1, :player2, :current_player
 
   def initialize(board)
     @board = board
   end
 
-  def setup_player(player); end
+  def setup_players
+    @player1 = setup_player(1)
+    @player2 = setup_player(2)
+  end
+
+  def setup_player(player_id)
+    name = get_player_name(player_id)
+    piece = get_player_game_piece(name)
+    Player.new(name, piece)
+  end
+
+  def play_turn
+    board.add_piece(@current_player.piece)
+    @current_player = get_next_player
+  end
 
   def get_column_input(player)
     input = nil
@@ -69,5 +85,9 @@ class Game
 
   def game_piece_taken(input)
     [player1.piece, player2.piece].include?(input)
+  end
+
+  def get_next_player
+    @current_player = @player1 ? @player2 : @player1
   end
 end

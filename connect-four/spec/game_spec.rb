@@ -215,20 +215,50 @@ describe Game do
   end
 
   describe '#setup_player' do
-    context 'game piece not taken' do
-      xit 'prompts for name once' do
-      end
-      xit 'prompts for game piece once' do
-      end
-      xit 'creates a new instance of player and sets instance variable' do
-      end
+    let(:player) { double('player') }
+    let(:board) { double('board') }
+    subject(:game_player) { described_class.new(board) }
+
+    it 'returns a new player' do
+      allow(game_player).to receive(:get_player_name).and_return('Kevin')
+      allow(game_player).to receive(:get_player_game_piece).and_return('⚫')
+      player = game_player.setup_player(1)
+      expect(player).not_to be_nil
     end
   end
 
   describe '#play_turn' do
-    xit 'switches players' do
+    let(:player1) { double('player', name: 'Kevin', piece: '⚫') }
+    let(:player2) { double('player', name: 'Ivy', piece: '⚪') }
+    let(:board) { double('board') }
+    subject(:game_turn) { described_class.new(board) }
+
+    before do
+      game_turn.instance_variable_set(:@current_player, player1)
+      game_turn.instance_variable_set(:@player1, player1)
+      game_turn.instance_variable_set(:@player2, player2)
+      allow(board).to receive(:add_piece)
     end
-    xit 'sends #add_piece to board' do
+
+    it 'switches players' do
+      game_turn.play_turn
+      expect(game_turn.current_player).to eq(game_turn.player2)
+    end
+
+    it "sends #add_piece with player's piece to board" do
+      expect(board).to receive(:add_piece).with('⚫').once
+      game_turn.play_turn
+    end
+  end
+
+  describe '#display_game' do
+    context 'game is full' do
+      xit 'game ends in a draw' do
+      end
+    end
+    context 'game has four in a row' do
+      xit 'game ends with a winner' do
+      end
     end
   end
 end
