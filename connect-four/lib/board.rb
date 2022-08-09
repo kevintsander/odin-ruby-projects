@@ -41,6 +41,12 @@ class Board
     display_footer
   end
 
+  def column_full?(column)
+    matrix.all? do |row|
+      row[column]
+    end
+  end
+
   private
 
   # Tests if there is four in a row starting from a specified location
@@ -104,11 +110,5 @@ class Board
 
   def display_footer
     puts '‾' * (3 * columns + 1)
-  end
-
-  def column_full?(column)
-    matrix.all? do |row|
-      row[column]
-    end
   end
 end

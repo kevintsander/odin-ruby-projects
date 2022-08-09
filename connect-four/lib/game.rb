@@ -24,9 +24,9 @@ class Game
 
   def display_game
     @current_player = player1
+    board.display
     loop do
       this_player = @current_player
-      board.display
       display_turn
       if board.four_in_a_row?
         winner(this_player)
