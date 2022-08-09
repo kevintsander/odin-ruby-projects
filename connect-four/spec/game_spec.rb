@@ -9,6 +9,7 @@ describe Game do
 
     context 'column is number in bounds' do
       it 'returns number' do
+        allow(board).to receive(:column_full?).and_return(false)
         input = '6'
         result = game_validate.validate_column_input(input)
         expect(result).to be(6)
@@ -30,6 +31,15 @@ describe Game do
           .to raise_error(ArgumentError)
       end
     end
+
+    context 'column is full' do
+      it 'throws out of bounds error' do
+        allow(board).to receive(:column_full?).and_return(true)
+        input = '6'
+        expect { game_validate.validate_column_input(input) }
+          .to raise_error(RangeError)
+      end
+    end
   end
 
   describe '#get_column_input' do
@@ -39,7 +49,8 @@ describe Game do
 
     context 'player enters valid input' do
       before do
-        allow(game_input).to receive(:gets).and_return('4')
+        allow(game_input).to receive(:gets).and_return('')
+        allow(game_input).to receive(:validate_column_input).and_return(4)
         allow(game_input).to receive(:puts)
       end
 
@@ -56,6 +67,7 @@ describe Game do
 
     context 'player enters out of bounds input once, then valid input' do
       before do
+        allow(board).to receive(:column_full?).and_return(false)
         allow(game_input).to receive(:gets).and_return('9', '2')
         allow(game_input).to receive(:puts)
       end
@@ -66,7 +78,7 @@ describe Game do
       end
 
       it 'displays out of bounds error message then returns input' do
-        error_msg = 'Out of bounds, must be between 0 and 6'
+        error_msg = 'Out of bounds, must select non-full row between 0 and 6'
         expect(game_input).to receive(:puts).with(error_msg).once
         result = game_input.get_column_input(player)
         expect(result).to be(2)
@@ -75,6 +87,7 @@ describe Game do
 
     context 'player enters non-numeric input once, then valid input' do
       before do
+        allow(board).to receive(:column_full?).and_return(false)
         allow(game_input).to receive(:gets).and_return('k', '2')
         allow(game_input).to receive(:puts)
       end
@@ -240,6 +253,7 @@ describe Game do
       game_turn.instance_variable_set(:@current_player, player1)
       game_turn.instance_variable_set(:@player1, player1)
       game_turn.instance_variable_set(:@player2, player2)
+      allow(board).to receive(:column_full?).and_return(false)
       allow(board).to receive(:add_piece)
       allow(game_turn).to receive(:puts)
       allow(game_turn).to receive(:gets).and_return("1\n")

@@ -64,7 +64,7 @@ class Game
       begin
         input = validate_column_input(gets.chomp)
       rescue RangeError
-        puts "Out of bounds, must be between 0 and #{board.columns - 1}"
+        puts "Out of bounds, must select non-full row between 0 and #{board.columns - 1}"
       rescue ArgumentError
         puts "Invalid entry, must be a number between 0 and #{board.columns - 1}"
       end
@@ -80,6 +80,7 @@ class Game
     end
     raise ArgumentError, 'input must be a number' unless column
     raise RangeError, 'number must be within range' unless column.between?(0, board.columns - 1)
+    raise RangeError, 'row is full' if board.column_full?(column)
 
     column
   end

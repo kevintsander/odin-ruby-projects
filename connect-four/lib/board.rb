@@ -55,6 +55,8 @@ class Board
   def four_in_a_row_direction?(row, col, direction)
     start_piece = nil
     4.times do
+      return false unless col.between?(0, columns - 1) && row.between?(0, rows - 1)
+
       piece = matrix[row][col]
       start_piece ||= piece
       col += direction[0]
@@ -85,22 +87,28 @@ class Board
   end
 
   def cell_text(row, col)
-    pretext = col.zero? ? '|' : ''
     piece = matrix[row][col]
-    piecetext = piece || '  '
-    posttext = col == columns - 1 ? '|' : ''
-    pretext + piecetext + posttext
+    text = "|#{piece || '  '}"
+    text += '|' if col == columns - 1
+    text
   end
 
   def display_header
     text = ''
     columns.times do |index|
-      text += " #{index}"
+      text += "| #{index}"
+      text += '|' if index == columns - 1
     end
     puts text
   end
 
   def display_footer
-    puts '‾' * 2 * columns
+    puts '‾' * (3 * columns + 1)
+  end
+
+  def column_full?(column)
+    matrix.all? do |row|
+      row[column]
+    end
   end
 end
